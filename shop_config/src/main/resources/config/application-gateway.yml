@@ -1,0 +1,32 @@
+#路由网关配置文件
+server:
+  port: 80
+spring:
+  application:
+    name: gateway
+  #配置路由规则
+  cloud:
+    gateway:
+      routes:
+        #后台服务路由规则
+        - id: back
+          uri: lb://MICSERVICE-BACK
+          predicates:
+            - Path=/back/**
+          filters:
+            - StripPrefix=1
+        #秒杀服务路由规则
+        - id: kill
+          uri: lb://MICSERVICE-KILL
+          predicates:
+            - Path=/kill/**
+        #前端静态资源路由规则
+        - id: resources
+          uri: lb://MICSERVICE-RESOURCES
+          predicates:
+            - Path=/**/*.js,/**/*.css,/**/*.png,/**/*.jpg,/**/*.gif
+        #前端页面路由规则
+        - id: front
+          uri: lb://MICSERVICE-FRONT
+          predicates:
+            - Path=/**
